@@ -2,9 +2,6 @@
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
-#endif
-#ifdef _WIN32
-#include <GL/glut.h>
 #else
 #include <GL/glut.h>
 #endif
@@ -36,7 +33,7 @@ enum myview{	// Constants for different views
 	DISTANT, INSIDE, OUTSIDE, DRIVER, HOUSE,
 	OTHER, BESIDE, BALLOON, HELICOPTER, AUTO
 };
- 
+
 myview  view = DISTANT;
 
 GLUquadricObj *p;				// Pointer for quadric objects.
@@ -164,9 +161,9 @@ void set_viewpoint () {
 		// F1 : Static viewpoint and stationary camera.
 		//Center observer relative to window width (play with this a bit),
 		//at a slight elevation. The observer should be looking at the origin.
-		gluLookAt( 
+		gluLookAt(
 			250.0, 0.0, 20.0 * height,
-			0.0, 0.0, 0.0, 
+			0.0, 0.0, 0.0,
 			0.0, 0.0, 1.0 );		draw_scenery();
 		// Move to position of car.
 		glTranslatef(car_x_pos, car_y_pos, car_z_pos);
@@ -174,14 +171,14 @@ void set_viewpoint () {
 		glRotatef(RAD_TO_DEG * car_direction, 0.0, 0.0, -1.0);
 		draw_car();
 		break;
-	
+
 	case INSIDE:
 		// F2: Static viewpoint inside the track (play with this a bit-
 		//where should the observer be located in x, y, z to be
-		//inside the track, at the height of the track?; 
+		//inside the track, at the height of the track?;
 		//the camera follows car so use the car's position in x and y.
-		gluLookAt( 
-			0.0, 0.0, 20.0 * height, 
+		gluLookAt(
+			0.0, 0.0, 20.0 * height,
 			car_x_pos, car_y_pos, car_z_pos,
 			0.0, 0.0, 1.0 );
 		draw_scenery();
@@ -189,14 +186,14 @@ void set_viewpoint () {
 		glRotatef(RAD_TO_DEG * car_direction, 0.0, 0.0, -1.0);
 		draw_car();
 		break;
-	
+
 	case OUTSIDE:
 		//F3:  Static viewpoint outside the track (play with this a bit-
 		//where should the observer be located in x, y, z to be
-		//outide the track but at the height of the track; 
+		//outide the track but at the height of the track;
 		//the camera follows car so use the car's position in x and y;
-		gluLookAt( 
-			250.0, 0.0, 20.0 * height, 
+		gluLookAt(
+			250.0, 0.0, 20.0 * height,
 			car_x_pos, car_y_pos, car_z_pos,
 			0.0, 0.0, 1.0 );
 		draw_scenery();
@@ -204,7 +201,7 @@ void set_viewpoint () {
 		glRotatef(RAD_TO_DEG * car_direction, 0.0, 0.0, -1.0);
 		draw_car();
 		break;
-	
+
 	case DRIVER:
 		// F4: Driver's point of view.  gluLookAt() is defined in "car space". Here the
 		// camera is fixed to the back of the car (a cylinder centered at (2,0,12)
@@ -239,7 +236,7 @@ void set_viewpoint () {
 		break;
 
 	case OTHER:
-		//F6: View looking backwards from another car. 
+		//F6: View looking backwards from another car.
 		//Here you want to position the camera in front of the car centered at
 		//2,0,12. The x position determines where the car is on the track.
 		//you want to look back at the car whose origin is at 0,0 in x,y.
@@ -252,7 +249,7 @@ void set_viewpoint () {
 		glTranslatef(- car_x_pos, - car_y_pos, 0.0);
 		draw_scenery();
 		break;
-	
+
 	case BESIDE:
 		//F7: View from beside the car and outside the track. Position the camera
 		// at the side of the car. This requires a positive movement from center of car
@@ -267,7 +264,7 @@ void set_viewpoint () {
 		glTranslatef(- car_x_pos, - car_y_pos, 0.0);
 		draw_scenery();
 		break;
-	
+
 	case BALLOON:
 		//F8: View from a balloon using the mouse position in x and y for camera
 		//eye position.Position the camera above the scene looking down to eye position.
@@ -309,7 +306,7 @@ void set_projection () {
 	// Reset the projection when zoom setting or window shape changes.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(zoom, GLfloat(win_width) / GLfloat(win_height), 
+	gluPerspective(zoom, GLfloat(win_width) / GLfloat(win_height),
 		1.0, 500.0);
 }
 
@@ -322,11 +319,11 @@ void reshape (GLint new_width, GLint new_height) {
 }
 
 void drive () {
-	// Idle callback function moves the car.  Since this function 
-	// posts redisplay whenever there is nothing else to do, 
+	// Idle callback function moves the car.  Since this function
+	// posts redisplay whenever there is nothing else to do,
 	// we do not need any other calls to glutPostRedisplay().
 	car_direction += 0.0005f;
-	if (car_direction > TWO_PI) 
+	if (car_direction > TWO_PI)
 		car_direction -= TWO_PI;
 	car_x_pos = TRACK_MIDDLE * sin(car_direction);
 	car_y_pos = TRACK_MIDDLE * cos(car_direction);
@@ -335,9 +332,9 @@ void drive () {
 		myclock++;
 		if (myclock > next_switch_time) {
 			next_switch_time += 2000 + rand() % 200;
-			cout << 
-				"Time: " << clock() << 
-				".  Next change: " << next_switch_time << 
+			cout <<
+				"Time: " << clock() <<
+				".  Next change: " << next_switch_time <<
 				'.' << endl;
 			switch (rand() % 7) {
 			case 0:
@@ -425,7 +422,7 @@ void keyboard (unsigned char key, int x, int y) {
 		// Decrease fog density.
 		set_fog_density(0.5f * fog_density);
 		break;
-	
+
 	case 27:
 		exit(0);
 	}
@@ -434,47 +431,47 @@ void keyboard (unsigned char key, int x, int y) {
 void keys (int key, int x, int y) {
 	// Set viewpoint from function keys.
 	switch (key) {
-	
+
 	case GLUT_KEY_LEFT:
 		zoom *= 1.2f;
 		cout << "Zoom angle = " << zoom << endl;
 		set_projection();
 		break;
-	
+
 	case GLUT_KEY_RIGHT:
 		zoom /= 1.2f;
 		cout << "Zoom angle = " << zoom << endl;
 		set_projection();
 		break;
-	
+
 	case GLUT_KEY_UP:
 		height += 1.0;
 		cout << "Height = " << height << endl;
 		break;
-	
+
 	case GLUT_KEY_DOWN:
 		height -= 1.0;
 		cout << "Height = " << height << endl;
 		break;
-	
+
 	case GLUT_KEY_F1:
 		movie_mode = false;
 		view = DISTANT;
 		cout << "Distant, fixed viewpoint." << endl;
 		break;
-	
+
 	case GLUT_KEY_F2:
 		movie_mode = false;
 		cout << "View from a panning camera inside the track." << endl;
 		view = INSIDE;
 		break;
-	
+
 	case GLUT_KEY_F3:
 		movie_mode = false;
 		cout << "View from a panning camera outside the track." << endl;
 		view = OUTSIDE;
 		break;
-	
+
 	case GLUT_KEY_F4:
 		movie_mode = false;
 		view = DRIVER;
@@ -483,25 +480,25 @@ void keys (int key, int x, int y) {
 		set_projection();
 		cout << "View from the driver's seat." << endl;
 		break;
-	
+
 	case GLUT_KEY_F5:
 		movie_mode = false;
 		view = HOUSE;
 		cout << "Looking at a house while driving around." << endl;
 		break;
-	
+
 	case GLUT_KEY_F6:
 		movie_mode = false;
 		view = OTHER;
 		cout << "Looking back from the car in front." << endl;
 		break;
-	
+
 	case GLUT_KEY_F7:
 		movie_mode = false;
 		view = BESIDE;
 		cout << "View from another car." << endl;
 		break;
-	
+
 	case GLUT_KEY_F8:
 		movie_mode = false;
 		view = BALLOON;
@@ -513,14 +510,14 @@ void keys (int key, int x, int y) {
 		view = HELICOPTER;
 		cout << "View from a helicopter: move mouse to fly around." << endl;
 		break;
-	
+
 	case GLUT_KEY_F10:
 		movie_mode = true;
 		myclock = 0;
 		next_switch_time = 0;
 		cout << "Movie mode: views change at random intervals." << endl;
 		break;
-	
+
 	case GLUT_KEY_END:
 		exit(0);
 	}
@@ -564,7 +561,7 @@ int main (int argc, char *argv[]) {
 		"   Press 'b' to toggle bumpy road conditions."			<< endl <<
 		"   Press '<' ('>') to decrease (increase) bumpiness."	<< endl <<
 		"Fog:"													<< endl <<
-		"   Press 'f' to toggle fog effect."					<< endl << 
+		"   Press 'f' to toggle fog effect."					<< endl <<
 		"   Press '+' ('-') to increase (decrease) fog."		<< endl <<
 		"Quit:"													<< endl <<
 		"   Press ESC to stop program."							<< endl <<
