@@ -6,7 +6,7 @@ const int STACKS = 50;
 
 using namespace std;
 
-Person::Person(int x, int z, float height): x(x), z(z), height(height){
+Person::Person(int x, int z, float height, float time): x(x), z(z), height(height), time(time){
 	headHeight = height / 8;
 	bodyHeight = headHeight * (2 + 6)/ 3;
 	upperArmHeight = headHeight * 5 / 3;
@@ -28,7 +28,7 @@ Person::Person(int x, int z, float height): x(x), z(z), height(height){
 	float calfY =  footHeight + calfHeight / 2;
 	float footY = footHeight/2;
 
-	
+
 	drawHead(headY);
 	drawBody(bodyY);
 	drawArms(upperArmY, forearmY, handY);
@@ -69,14 +69,16 @@ void Person::drawArms(float upperArmY, float forearmY, float handY){
 	float upperArmRadius = radius / 4;
 	float forearmRadius = radius / 5;
 	float handRadius = radius / 3;
+	float endUpperY = upperArmY - upperArmHeight/2;
 	for(int i = -1; i <= 1; i += 2){
+		float armX = x + i * (radius + upperArmRadius / 2);
 		glPushMatrix();
-			glTranslatef(x + i * (radius + upperArmRadius / 2), upperArmY, z);
-			glRotatef(90,1,0,0);
+			glTranslatef(armX, upperArmY, z);
+			glRotatef(90 + (i * 45 * sin(time)),1,0,0);
 			gluCylinder(quad, upperArmRadius, forearmRadius, upperArmHeight, SLICES, STACKS);
 		glPopMatrix();
 		glPushMatrix();
-			glTranslatef(x + i * (radius + upperArmRadius / 2), forearmY, z);
+			glTranslatef(armX * cos(time) + endUpperY * sin(time), -armX * sin(time) + endUpperY * cos(time), z);
 			glRotatef(90,1,0,0);
 			gluCylinder(quad, forearmRadius, forearmRadius, forearmHeight, SLICES, STACKS);
 		glPopMatrix();
