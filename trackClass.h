@@ -9,7 +9,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-
+#ifndef TRACK_H
+#define TRACK_H
 
 class trackGL{
 
@@ -20,7 +21,7 @@ class trackGL{
     const GLfloat TRACK_INNER_RADIUS = 50.0;
     const GLfloat TRACK_WIDTH = 15.0;
 
-    const GLfloat trackColor[3] = {0.658f, 0.220f, 0.173f};
+    const GLfloat trackColor[3] = {0.75f, 0.20f, 0.17f};
     const GLfloat innerColor[3] = {0.4f, 0.6f, 0.196f};
 
 
@@ -35,3 +36,5 @@ class trackGL{
 
 
 };
+
+#endif

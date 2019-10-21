@@ -1,13 +1,19 @@
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
-#include <GL/glut.h>
+#include <math.h>
 
 #ifndef PERSON_H
 #define PERSON_H
 
 class Person{
 	public:
-		
+
 		//everything of interest is done in the read
 		float headHeight;
 		float bodyHeight;
@@ -18,7 +24,7 @@ class Person{
 		float calfHeight;
 		float footHeight;
 
-		Person(int x, int z, float height=8);
+		Person(int x, int z, float height, float time);
 		~Person();
 		void Run();
 
@@ -28,6 +34,7 @@ class Person{
 		void drawLegs(float thighY, float calfY, float footY);
 	private:
 		float height;
+		float time;
 		int x;
 		int z;
 };

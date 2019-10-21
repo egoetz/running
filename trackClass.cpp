@@ -9,8 +9,8 @@
 trackGL:: trackGL() {
   GLUquadricObj *quad = gluNewQuadric();
   gluQuadricDrawStyle(quad, GLU_FILL);
-  glColor3fv(innerColor);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, innerColor);
 	gluDisk(quad, 0.0, TRACK_INNER_RADIUS, 50, 5);
-	glColor3fv(trackColor);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, trackColor);
 	gluDisk(quad, TRACK_INNER_RADIUS, TRACK_INNER_RADIUS + TRACK_WIDTH, 50, 5);
 }
