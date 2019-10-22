@@ -8,11 +8,7 @@ const int STACKS = 50;
 
 using namespace std;
 
-/* Constructor
- * Preconditions: None
- * Postconditions: Creates a person object with the given attributes
- */
-Person::Person(int x, int z, float height, float time): x(x), z(z), height(height), time(time){
+Person::Person(int x, int z, float height, float runnerDirection): x(x), z(z), height(height), runnerDirection(runnerDirection){
 	headHeight = height / 8;
 	bodyHeight = headHeight * (2 + 6)/ 3;
 	upperArmHeight = headHeight * 5 / 3;
@@ -22,7 +18,6 @@ Person::Person(int x, int z, float height, float time): x(x), z(z), height(heigh
 	calfHeight = headHeight * 5 / 3;
 	footHeight = headHeight * 1 / 3;
 
-	runningAngle = 0;// RAD_TO_DEGREE * time;
 
 	float headY = footHeight + calfHeight + thighHeight + bodyHeight;
 	float bodyY = footHeight + calfHeight + thighHeight + bodyHeight / 2;
@@ -37,57 +32,40 @@ Person::Person(int x, int z, float height, float time): x(x), z(z), height(heigh
 	float footY = footHeight/2;
 
 	glPushMatrix();
-		//glRotatef(-time,0.0, 1.0, 0.0);
 		drawHead(headY);
 		drawBody(bodyY);
 		drawArms(upperArmY, forearmY, handY);
 		drawLegs(thighY, calfY, footY);
 	glPopMatrix();
 }
-
-/* Destructor
- * Preconditions: Person object must have been instantiated
- * Postconditions: None - no variables were dynamically allocated
- */
 Person::~Person(){}
 
-/* Draws the head of the stick figure
- * Preconditions: Constructor must be called
- * Post conditions: Creates the head of a stick figure using a sphere
- */
 void Person::drawHead(float headY){
 	GLUquadric *quad = gluNewQuadric();
 	gluQuadricDrawStyle(quad, GLU_FILL);
 	float radius = headHeight / 2;
 	glPushMatrix();
 		glTranslatef(x, headY, z);
-		//glRotatef(runningAngle,0,1,0);
+		glRotatef(-90 + RAD_TO_DEGREE * runnerDirection, 0.0, 1.0, 0.0);
 		glScalef(radius / headHeight, 1, 1);
 		gluSphere(quad, headHeight, SLICES, STACKS);
 	glPopMatrix();
 }
 
-/* Draws the body of the stick figure
- * Preconditions: Constructor must be called
- * Post conditions: Creates the body of a stick figure using a cylinder
- */
+
 void Person::drawBody(float bodyY){
 	GLUquadric *quad = gluNewQuadric();
 	gluQuadricDrawStyle(quad, GLU_FILL);
 	float radius = headHeight / 2;
-	//cout << headHeight << ' ' << bodyHeight << ' ' << radius << endl;
 	glPushMatrix();
 		glTranslatef(x, bodyY, z);
-		//glRotatef(runningAngle,0,-1,0);
+		glRotatef(-90 + RAD_TO_DEGREE * runnerDirection, 0.0, 1.0, 0.0);
 		glRotatef(90,1,0,0);
 		gluCylinder(quad, radius, radius, bodyHeight, SLICES, STACKS);
 	glPopMatrix();
 }
 
-/* Draws the arms of the stick figure
- * Preconditions: Constructor must be called
- * Post conditions: Creates the arms of a stick figure using cylinders
- */
+
 void Person::drawArms(float upperArmY, float forearmY, float handY){
 	GLUquadric *quad = gluNewQuadric();
 	gluQuadricDrawStyle(quad, GLU_FILL);
@@ -98,15 +76,15 @@ void Person::drawArms(float upperArmY, float forearmY, float handY){
 	float handRadius = radius * 1 / 2;
 	for(int i = -1; i <= 1; i += 2){
 		float upperArmX = x + i * (radius + upperArmRadius / 2);
-		float upperArmDegrees = 90 + (i * 45 * sin(15*time));
+		float upperArmDegrees = 90 + (i * 45 * sin(15*runnerDirection));
 
 		glPushMatrix();
 			glTranslatef(upperArmX, upperArmY, z);
-			//glRotatef(runningAngle,0,1,0);
+			glRotatef(-90 + RAD_TO_DEGREE * runnerDirection, 0.0, 1.0, 0.0);
 			glRotatef(upperArmDegrees,1,0,0);
 			glPushMatrix();
 				glTranslatef(0, 0, upperArmHeight);
-				glRotatef(90+ (-i * 35 * sin(15*time)),1,0,0);
+				glRotatef(90+ (-i * 35 * sin(15*runnerDirection)),1,0,0);
 
 				glPushMatrix();
 					glTranslatef(0, 0, forearmHeight + 3 * handRadius);
@@ -118,16 +96,13 @@ void Person::drawArms(float upperArmY, float forearmY, float handY){
 
 				gluCylinder(quad, forearmRadius, forearmRadius, forearmHeight, SLICES, STACKS);
 			glPopMatrix();
-
+			
 			gluCylinder(quad, upperArmRadius, forearmRadius, upperArmHeight, SLICES, STACKS);
 		glPopMatrix();
 	}
 }
 
-/* Draws the legs of the stick figure
- * Preconditions: Constructor must be called
- * Post conditions: Creates the legs of a stick figure using cylinders
- */
+
 void Person::drawLegs(float thighY, float calfY, float footY){
 	GLUquadric *quad = gluNewQuadric();
 	gluQuadricDrawStyle(quad, GLU_FILL);
@@ -136,22 +111,22 @@ void Person::drawLegs(float thighY, float calfY, float footY){
 	float thighRadius = radius / 2;
 	float calfRadius = thighRadius * 3 / 4;
 	float footRadius = thighRadius * 2;
-
+	
 	for(int i = -1; i <= 1; i += 2){
 		float thighX = x + i * (radius / 2 + thighRadius / 2);
-		float thighDegrees = 120 + (-i * 30 * sin(15*time));
+		float thighDegrees = 120 + (-i * 30 * sin(15*runnerDirection));
 
 		glPushMatrix();
 			glTranslatef(thighX, thighY, z);
-			//glRotatef(runningAngle,0,1,0);
+		glRotatef(-90 + RAD_TO_DEGREE * runnerDirection, 0.0, 1.0, 0.0);
 			glRotatef(thighDegrees,1,0,0);
 			glPushMatrix();
 				glTranslatef(0, 0, thighHeight);
-				glRotatef(-90 + (-i * 35 * sin(15*time)),1,0,0);
+				glRotatef(-90 + (-i * 35 * sin(15*runnerDirection)),1,0,0);
 
 				glPushMatrix();
 					glTranslatef(0, -calfRadius, calfHeight);
-					glRotatef((-i * 15 * sin(15*time)),1,0,0);
+					glRotatef((-i * 15 * sin(15*runnerDirection)),1,0,0);
 					glScalef(.3, 1, 1);
 
 					gluCylinder(quad, footRadius, footRadius, footHeight, SLICES, STACKS);
@@ -159,7 +134,7 @@ void Person::drawLegs(float thighY, float calfY, float footY){
 
 				gluCylinder(quad, calfRadius, calfRadius, calfHeight, SLICES, STACKS);
 			glPopMatrix();
-
+			
 			gluCylinder(quad, thighRadius, calfRadius, thighHeight, SLICES, STACKS);
 		glPopMatrix();
 	}
