@@ -14,6 +14,7 @@ using namespace std;
 // Dimensions, etc.
 const GLfloat PI = 3.1415926f;
 const GLfloat TWO_PI = 2.0 * PI;
+const GLfloat RAD_TO_DEGREE = 180 / PI;
 const GLfloat TRACK_INNER_RADIUS = 50.0;
 const GLfloat TRACK_WIDTH = 15.0;
 const GLfloat TRACK_MIDDLE = TRACK_INNER_RADIUS + 0.5 * TRACK_WIDTH;
@@ -29,15 +30,14 @@ GLUquadricObj *p;				// Pointer for quadric objects.
 
 // Global variables.
 GLfloat runnerDirection = 0.0;	// Variables for moving car.
-GLfloat runnerXPos = 57.5;
-GLfloat runnerYPos = 0.0;
-GLfloat runnerZPos = 0.0;
+GLfloat runnerXPos = 0.0;
+GLfloat runnerYPos = 57.5;
 GLfloat height = 5.0;			// Viewer's height
 GLfloat zoom = 50.0;			// Camera zoom setting
 GLfloat mouseX = 0.0;			// Mouse coordinates
 GLfloat mouseY = 0.0;
-GLint windowWidth = 400;			// Window dimensions
-GLint windowHeight = 300;
+GLint windowWidth = 1600;			// Window dimensions
+GLint windowHeight = 1200;
 GLfloat runnerColor[3] = {0.0, 0.0, 0.0};
 
 
@@ -47,17 +47,17 @@ void display (void) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(
-		100.0, -50, 10.0,
+		100.0, 10.0, 10.0,
 		0.0, 0.0, 0.0,
 		0.0, 0.0, 1.0 );
-
-	glPushMatrix();
+	trackGL track;
+	glTranslatef(0.0, 0.0, 0.6);
 	glRotatef(90, 1.0, 0.0, 0.0);
+	//glRotatef(RAD_TO_DEGREE * runnerDirection, 0.0, 0.0, -1.0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, runnerColor);
 	Person runner(runnerXPos,runnerYPos, 15, runnerDirection);
-	glPopMatrix();
 
-	trackGL track;
+
 	glutSwapBuffers();
 }
 
@@ -120,7 +120,7 @@ void init(){
 }
 
 void run(){
-	runnerDirection += 0.005f;
+	runnerDirection += 0.001f;
 	if(runnerDirection > TWO_PI){
 		runnerDirection -= TWO_PI;
 	}
@@ -137,7 +137,7 @@ int main (int argc, char *argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
 	glutInitWindowSize(windowWidth, windowHeight);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Window");
+	glutCreateWindow("Run");
 
 	// Register callbacks.
 	glutDisplayFunc(display);

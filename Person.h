@@ -35,6 +35,7 @@ class Person{
 	private:
 		float height;
 		float time;
+		float runningAngle;
 		int x;
 		int z;
 };
