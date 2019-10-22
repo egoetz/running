@@ -11,7 +11,7 @@
 
 using namespace std;
 
-// Dimensions, etc.
+// Constants
 const GLfloat PI = 3.1415926f;
 const GLfloat TWO_PI = 2.0 * PI;
 const GLfloat RAD_TO_DEGREE = 180 / PI;
@@ -19,30 +19,20 @@ const GLfloat TRACK_INNER_RADIUS = 50.0;
 const GLfloat TRACK_WIDTH = 15.0;
 const GLfloat TRACK_MIDDLE = TRACK_INNER_RADIUS + 0.5 * TRACK_WIDTH;
 
-enum myview{	// Constants for different views
-	DISTANT, INSIDE, OUTSIDE, DRIVER, HOUSE,
-	OTHER, BESIDE, BALLOON, HELICOPTER, AUTO
-};
-
-myview  view = DISTANT;
-
-GLUquadricObj *p;				// Pointer for quadric objects.
-
 // Global variables.
-GLfloat runnerDirection = 0.0;	// Variables for moving car.
+GLfloat runnerDirection = 0.0;
 GLfloat runnerXPos = 0.0;
 GLfloat runnerYPos = 57.5;
-GLfloat height = 5.0;			// Viewer's height
-GLfloat zoom = 50.0;			// Camera zoom setting
-GLfloat mouseX = 0.0;			// Mouse coordinates
-GLfloat mouseY = 0.0;
-GLint windowWidth = 1600;			// Window dimensions
+GLfloat zoom = 50.0;
+GLint windowWidth = 1600;
 GLint windowHeight = 1200;
 GLfloat runnerColor[3] = {0.0, 0.0, 0.0};
 
-
+/* Display callback function
+ * Preconditions: OpenGL state must be initialized
+ * Postconditions: Displays a track with a stick figure running around it
+ */
 void display (void) {
-	// The display callback function.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -56,41 +46,47 @@ void display (void) {
 	//glRotatef(RAD_TO_DEGREE * runnerDirection, 0.0, 0.0, -1.0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, runnerColor);
 	Person runner(runnerXPos,runnerYPos, 15, runnerDirection);
-
-
 	glutSwapBuffers();
 }
 
+/* Sets the projection when zoom or window shape change
+ * Preconditions: A glut window must exist and have been initialized
+ * Postconditions: Sets new gluPerspective based on current zoom and
+ * window shape
+ */
 void set_projection () {
-	// Reset the projection when zoom setting or window shape changes.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(zoom, GLfloat(windowWidth) / GLfloat(windowHeight),
 		1.0, 500.0);
 }
 
+/* Reshape callback function
+ * Preconditions: A glut window must exist and have been initialized
+ * Postconditions: Reshapes the image to match the new window shape
+ */
 void reshape (GLint new_width, GLint new_height) {
-	// Window reshaping function.
 	windowWidth = new_width;
 	windowHeight = new_height;
 	glViewport(0, 0, windowWidth, windowHeight);
 	set_projection();
 }
 
-void mouse (int x, int y) {
-	// Get mouse position and scale values to [-1, 1].
-	mouseX = (2.0 * x) / windowWidth - 1.0;
-	mouseY = (2.0 * y) / windowHeight - 1.0;
-}
-
+/* Keyboard callback function
+ * Preconditions: glutKeyboardFunc(keyboard) must be called
+ * Postconditions: User can exit the program by pressing the escape key
+ */
 void keyboard (unsigned char key, int x, int y) {
-	// Keyboard callback function.
 	switch (key) {
 		case 27:
 			exit(0);
 	}
 }
 
+/* Initialize openGL state
+ * Preconditions: Glut window management must have been set
+ * Postconditions: Color and depth buffers are cleared and lighting is set
+ */
 void init(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.529, 0.808, 0.922, 1.0);
@@ -119,6 +115,11 @@ void init(){
 
 }
 
+/* Idle callback function
+ * Preconditions: glutIdleFunc(run) must be called
+ * Postconditions: Changes the position of the runner to relocate it
+ * around the track
+ */
 void run(){
 	runnerDirection += 0.001f;
 	if(runnerDirection > TWO_PI){
@@ -130,6 +131,11 @@ void run(){
 	glutPostRedisplay();
 }
 
+/*
+ * Preconditions: Glut and OpenGL must be installed
+ * Postconditions: Creates a glut window that displays a stick-figure runner
+ * running around a track
+ */
 int main (int argc, char *argv[]) {
 
 	// Initialize GLUT.
@@ -146,16 +152,10 @@ int main (int argc, char *argv[]) {
 	glutPassiveMotionFunc(mouse);
 	glutKeyboardFunc(keyboard);
 
-	// Select GL options.
 	glEnable(GL_DEPTH_TEST);
-	p = gluNewQuadric();
-	gluQuadricDrawStyle(p, GLU_FILL);
 
 	init();
 
-
-
-	// "Drive!" he said.
 	glutMainLoop();
 	return 0;
 }

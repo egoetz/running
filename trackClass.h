@@ -15,8 +15,6 @@
 class trackGL{
 
   public:
-    // Pointer for quadric objects.
-
     // Constants
     const GLfloat TRACK_INNER_RADIUS = 50.0;
     const GLfloat TRACK_WIDTH = 15.0;
