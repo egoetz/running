@@ -96,21 +96,20 @@ void init(){
 	GLfloat light_ambient[] = {1.0,1.0,1.0,1.0};
 
 
-	glShadeModel (GL_SMOOTH); //smooth shaded polygons
+	glShadeModel (GL_SMOOTH);
 
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position); //light position
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient); //a slightly red ambient light
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
-	glEnable(GL_LIGHTING); //enable lighting
+	glEnable(GL_LIGHTING);
 
-	glEnable(GL_LIGHT0); //enable the first light = light0
+	glEnable(GL_LIGHT0);
 
-	glEnable(GL_DEPTH_TEST); //depth test performed
+	glEnable(GL_DEPTH_TEST);
 
-	glEnable(GL_NORMALIZE); //if scaling is used then renormalize normals
+	glEnable(GL_NORMALIZE);
 
-	// Initialize projection.
 	set_projection();
 
 }
