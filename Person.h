@@ -27,7 +27,7 @@ class Person{
 		 * Preconditions: None
 		 * Postconditions: Creates a person object with the given attributes
 		 */
-		Person(int x, int z, float height, float time);
+		Person(int x, int z, float height, float runnerDirection);
 
 		/* Destructor
 		 * Preconditions: Person object must have been instantiated
@@ -61,7 +61,7 @@ class Person{
 
 	private:
 		float height;
-		float time;
+		float runnerDirection;
 		float runningAngle;
 		int x;
 		int z;
