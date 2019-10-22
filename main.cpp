@@ -1,3 +1,10 @@
+/* Project 3 - Erika Goetz and Aedan Pettit
+ * All code written by Erika and Aedan
+ * This project displays a stick-figure runner that runs around the track
+ * The animation can be toggled using the menu that is activated by a right
+ * click.
+ */
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -23,6 +30,7 @@ const GLfloat TRACK_MIDDLE = TRACK_INNER_RADIUS + 0.5 * TRACK_WIDTH;
 GLfloat runnerDirection = 0.0;
 GLfloat runnerXPos = 0.0;
 GLfloat runnerYPos = 57.5;
+bool moving = true;
 GLfloat zoom = 50.0;
 GLint windowWidth = 1600;
 GLint windowHeight = 1200;
@@ -130,6 +138,39 @@ void run(){
 	glutPostRedisplay();
 }
 
+/* Visibility callback function
+ * Preconditions: glutVisibilityFunc(Visible) must be called
+ * Postconditions: Disables idle func if the runner is not visible
+ */
+void Visible(int state) {
+
+	if (state == GLUT_VISIBLE) {
+
+	if (moving) glutIdleFunc(run); } //if visible and moving then animate it
+
+	else { if (moving) glutIdleFunc(NULL); } //if invisible and moving then stop animation
+}
+
+/* Menu callback function
+ * Preconditions: Menu must be initialized
+ * Postconditions: Creates glut menu allowing user to start and stop animation
+ * or exit the program.
+ */
+void menuCallback(int value){
+	switch(value){
+		case 1:
+			moving = true;
+			glutIdleFunc(run);
+			break;
+		case 2:
+			moving = false;
+			glutIdleFunc(NULL);
+			break;
+		case 3:
+			exit(0);
+	}
+}
+
 /*
  * Preconditions: Glut and OpenGL must be installed
  * Postconditions: Creates a glut window that displays a stick-figure runner
@@ -149,6 +190,14 @@ int main (int argc, char *argv[]) {
 	glutReshapeFunc(reshape);
 	glutIdleFunc(run);
 	glutKeyboardFunc(keyboard);
+	glutVisibilityFunc(Visible);
+
+	glutCreateMenu(menuCallback);
+	glutAddMenuEntry("Run!", 1);
+	glutAddMenuEntry("Stop", 2);
+	glutAddMenuEntry("Quit", 3);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
 
 	glEnable(GL_DEPTH_TEST);
 
